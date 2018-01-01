@@ -47,8 +47,9 @@ namespace TicketSystem.Controllers
         }
 
         // POST api/ticket
-        public int Post([FromBody] TicketEntity ticketEntity)
+        public int Post(int userid, [FromBody]TicketEntity ticketEntity)
         {
+            ticketEntity.createdby = userid;
             return _ticketServices.CreateTicket(ticketEntity);
         }
 

@@ -70,6 +70,36 @@ namespace BusinessServices
             return null;
         }
 
+        public TicketEntity GetTicketHistoryById(int id)
+        {
+
+            var ticketRep = _unitOfWork.TicketRepository;
+            
+            //var tDeptDetails = ticketRep.Query<tblticket>().ToList();
+
+            var ticket = ticketRep.GetWithInclude(t => t.id == id, "tbltickethistory").ToList().FirstOrDefault();
+
+
+            //var tickets = from t in _unitOfWork.TicketRepository.GetAll()
+            //              join td in _unitOfWork.DepartmentRepository.Get()
+            //              on t.deptid equals td.id
+            //              select new { Subject = t.subject, };
+            if (ticket != null)
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<tblticket, TicketEntity>();
+                    //cfg.AddProfile()... etc...
+                });
+                var mapper = config.CreateMapper();
+                var ticketsModel = mapper.Map<tblticket, TicketEntity>(ticket);
+                return ticketsModel;
+            }
+            return null;
+        }
+
+
+
         /// <summary>
         /// Creates a ticket
         /// </summary>
@@ -81,7 +111,11 @@ namespace BusinessServices
             {
                 var ticket = new tblticket
                 {
-                    ticketname = ticketEntity.ticketname
+                    subject = ticketEntity.subject,
+                    createdby = ticketEntity.createdby,
+                    description = ticketEntity.description,
+                    deptid = ticketEntity.deptid,
+                    comment = ticketEntity.comment
                 };
                 _unitOfWork.TicketRepository.Insert(ticket);
                 _unitOfWork.Save();
@@ -106,7 +140,10 @@ namespace BusinessServices
                     var ticket = _unitOfWork.TicketRepository.GetByID(ticketId);
                     if (ticket != null)
                     {
-                        ticket.ticketname = ticketEntity.ticketname;
+                        ticket.subject = ticketEntity.subject;
+                        ticket.deptid = ticketEntity.deptid;
+                        ticket.description = ticketEntity.description;
+                        ticket.comment = ticketEntity.comment;
                         _unitOfWork.TicketRepository.Update(ticket);
                         _unitOfWork.Save();
                         scope.Complete();

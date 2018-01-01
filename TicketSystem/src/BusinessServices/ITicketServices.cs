@@ -17,5 +17,6 @@ namespace BusinessServices
         int CreateTicket(TicketEntity ticketEntity);
         bool UpdateTicket(int ticketId, TicketEntity ticketEntity);
         bool DeleteTicket(int ticketId);
+        TicketEntity GetTicketHistoryById(int ticketId);
     }
 }

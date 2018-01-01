@@ -189,6 +189,11 @@ namespace DataModel.GenericRepository
         {
             return DbSet.First<TEntity>(predicate);
         }
+    
+        public IQueryable<TEntity> Query<T>() {
+            IQueryable<TEntity> query = DbSet;
+            return query;
+        }
 
 
         #endregion

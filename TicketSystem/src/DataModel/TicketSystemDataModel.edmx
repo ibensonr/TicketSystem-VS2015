@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="TicketSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="TicketSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="tbldepartment">
           <Key>
             <PropertyRef Name="id" />
@@ -37,9 +37,12 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ticketid" Type="int" />
-          <Property Name="assignedtoid" Type="int" />
+          <Property Name="deptid" Type="int" />
           <Property Name="ticketstatusid" Type="nchar" MaxLength="10" />
-          <Property Name="comments" Type="varchar" MaxLength="250" />
+          <Property Name="assignedtoid" Type="int" />
+          <Property Name="subject" Type="varchar" MaxLength="250" />
+          <Property Name="description" Type="varchar" MaxLength="250" />
+          <Property Name="comment" Type="nvarchar" MaxLength="250" />
           <Property Name="status" Type="int" />
           <Property Name="createdby" Type="int" />
           <Property Name="createdon" Type="datetime" />
@@ -54,8 +57,10 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="deptid" Type="int" />
           <Property Name="ticketstatusid" Type="int" />
-          <Property Name="ticketname" Type="varchar" MaxLength="250" />
-          <Property Name="ticketdesc" Type="varchar" MaxLength="250" />
+          <Property Name="assignedtoid" Type="int" />
+          <Property Name="subject" Type="varchar" MaxLength="250" />
+          <Property Name="description" Type="varchar" MaxLength="250" />
+          <Property Name="comment" Type="nvarchar" MaxLength="250" />
           <Property Name="status" Type="int" />
           <Property Name="createdby" Type="int" />
           <Property Name="createdon" Type="datetime" />
@@ -132,6 +137,18 @@
           <Property Name="modifiedon" Type="datetime" />
           <Property Name="deleted" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK_tbltickethistory_tbltickets">
+          <End Role="tbltickets" Type="Self.tbltickets" Multiplicity="0..1" />
+          <End Role="tbltickethistory" Type="Self.tbltickethistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbltickets">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbltickethistory">
+              <PropertyRef Name="ticketid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tbltickets_tbldepartment">
           <End Role="tbldepartment" Type="Self.tbldepartment" Multiplicity="0..1" />
           <End Role="tbltickets" Type="Self.tbltickets" Multiplicity="*" />
@@ -153,6 +170,18 @@
             </Principal>
             <Dependent Role="tbltickets">
               <PropertyRef Name="ticketstatusid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbltickets_tbluser">
+          <End Role="tbluser" Type="Self.tbluser" Multiplicity="0..1" />
+          <End Role="tbltickets" Type="Self.tbltickets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbluser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbltickets">
+              <PropertyRef Name="assignedtoid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -214,12 +243,20 @@
           <EntitySet Name="tbluserdepartment" EntityType="Self.tbluserdepartment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbluserinfo" EntityType="Self.tbluserinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbluserrole" EntityType="Self.tbluserrole" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tbltickethistory_tbltickets" Association="Self.FK_tbltickethistory_tbltickets">
+            <End Role="tbltickets" EntitySet="tbltickets" />
+            <End Role="tbltickethistory" EntitySet="tbltickethistory" />
+          </AssociationSet>
           <AssociationSet Name="FK_tbltickets_tbldepartment" Association="Self.FK_tbltickets_tbldepartment">
             <End Role="tbldepartment" EntitySet="tbldepartment" />
             <End Role="tbltickets" EntitySet="tbltickets" />
           </AssociationSet>
           <AssociationSet Name="FK_tbltickets_tblticketstatus" Association="Self.FK_tbltickets_tblticketstatus">
             <End Role="tblticketstatus" EntitySet="tblticketstatus" />
+            <End Role="tbltickets" EntitySet="tbltickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbltickets_tbluser" Association="Self.FK_tbltickets_tbluser">
+            <End Role="tbluser" EntitySet="tbluser" />
             <End Role="tbltickets" EntitySet="tbltickets" />
           </AssociationSet>
           <AssociationSet Name="FK_tbluserdepartment_tbldepartment" Association="Self.FK_tbluserdepartment_tbldepartment">
@@ -280,13 +317,17 @@
           <Property Name="ticketid" Type="Int32" />
           <Property Name="assignedtoid" Type="Int32" />
           <Property Name="ticketstatusid" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="comments" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="status" Type="Int32" />
           <Property Name="createdby" Type="Int32" />
           <Property Name="createdon" Type="DateTime" Precision="3" />
           <Property Name="modifiedby" Type="Int32" />
           <Property Name="modifiedon" Type="DateTime" Precision="3" />
           <Property Name="deleted" Type="Boolean" Nullable="false" />
+          <Property Name="deptid" Type="Int32" />
+          <Property Name="subject" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="comment" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbltickets" Relationship="TicketSystemModel.FK_tbltickethistory_tbltickets" FromRole="tbltickethistory" ToRole="tblticket" />
         </EntityType>
         <EntityType Name="tblticket">
           <Key>
@@ -295,8 +336,6 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="deptid" Type="Int32" />
           <Property Name="ticketstatusid" Type="Int32" />
-          <Property Name="ticketname" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="ticketdesc" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="status" Type="Int32" />
           <Property Name="createdby" Type="Int32" />
           <Property Name="createdon" Type="DateTime" Precision="3" />
@@ -305,6 +344,12 @@
           <Property Name="deleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tbldepartment" Relationship="Self.FK_tbltickets_tbldepartment" FromRole="tbltickets" ToRole="tbldepartment" />
           <NavigationProperty Name="tblticketstatus" Relationship="TicketSystemModel.FK_tbltickets_tblticketstatus" FromRole="tblticket" ToRole="tblticketstatus" />
+          <Property Name="assignedtoid" Type="Int32" />
+          <Property Name="subject" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="comment" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbltickethistory" Relationship="TicketSystemModel.FK_tbltickethistory_tbltickets" FromRole="tblticket" ToRole="tbltickethistory" />
+          <NavigationProperty Name="tbluser" Relationship="TicketSystemModel.FK_tbltickets_tbluser" FromRole="tblticket" ToRole="tbluser" />
         </EntityType>
         <EntityType Name="tbluser">
           <Key>
@@ -321,6 +366,7 @@
           <Property Name="deleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="tbluserdepartments" Relationship="Self.FK_tbluserdepartment_tbluser" FromRole="tbluser" ToRole="tbluserdepartment" />
           <NavigationProperty Name="tbluserinfoes" Relationship="Self.FK_tbluserinfo_tbluserinfo" FromRole="tbluser" ToRole="tbluserinfo" />
+          <NavigationProperty Name="tbltickets" Relationship="TicketSystemModel.FK_tbltickets_tbluser" FromRole="tbluser" ToRole="tblticket" />
         </EntityType>
         <EntityType Name="tbluserdepartment">
           <Key>
@@ -463,6 +509,14 @@
             <End Role="tblticketstatus" EntitySet="tblticketstatus" />
             <End Role="tblticket" EntitySet="tbltickets" />
           </AssociationSet>
+          <AssociationSet Name="FK_tbltickethistory_tbltickets" Association="TicketSystemModel.FK_tbltickethistory_tbltickets">
+            <End Role="tblticket" EntitySet="tbltickets" />
+            <End Role="tbltickethistory" EntitySet="tbltickethistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbltickets_tbluser" Association="TicketSystemModel.FK_tbltickets_tbluser">
+            <End Role="tbluser" EntitySet="tblusers" />
+            <End Role="tblticket" EntitySet="tbltickets" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="tblticketstatus">
           <Key>
@@ -486,6 +540,30 @@
             </Principal>
             <Dependent Role="tblticket">
               <PropertyRef Name="ticketstatusid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbltickethistory_tbltickets">
+          <End Type="TicketSystemModel.tblticket" Role="tblticket" Multiplicity="0..1" />
+          <End Type="TicketSystemModel.tbltickethistory" Role="tbltickethistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblticket">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbltickethistory">
+              <PropertyRef Name="ticketid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbltickets_tbluser">
+          <End Type="TicketSystemModel.tbluser" Role="tbluser" Multiplicity="0..1" />
+          <End Type="TicketSystemModel.tblticket" Role="tblticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbluser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tblticket">
+              <PropertyRef Name="assignedtoid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -526,11 +604,14 @@
           <EntitySetMapping Name="tbltickethistories">
             <EntityTypeMapping TypeName="TicketSystemModel.tbltickethistory">
               <MappingFragment StoreEntitySet="tbltickethistory">
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="subject" ColumnName="subject" />
+                <ScalarProperty Name="deptid" ColumnName="deptid" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="ticketid" ColumnName="ticketid" />
                 <ScalarProperty Name="assignedtoid" ColumnName="assignedtoid" />
                 <ScalarProperty Name="ticketstatusid" ColumnName="ticketstatusid" />
-                <ScalarProperty Name="comments" ColumnName="comments" />
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="createdby" ColumnName="createdby" />
                 <ScalarProperty Name="createdon" ColumnName="createdon" />
@@ -543,11 +624,13 @@
           <EntitySetMapping Name="tbltickets">
             <EntityTypeMapping TypeName="TicketSystemModel.tblticket">
               <MappingFragment StoreEntitySet="tbltickets">
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="subject" ColumnName="subject" />
+                <ScalarProperty Name="assignedtoid" ColumnName="assignedtoid" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="deptid" ColumnName="deptid" />
                 <ScalarProperty Name="ticketstatusid" ColumnName="ticketstatusid" />
-                <ScalarProperty Name="ticketname" ColumnName="ticketname" />
-                <ScalarProperty Name="ticketdesc" ColumnName="ticketdesc" />
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="createdby" ColumnName="createdby" />
                 <ScalarProperty Name="createdon" ColumnName="createdon" />
