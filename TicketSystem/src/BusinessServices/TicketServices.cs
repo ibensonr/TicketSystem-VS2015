@@ -70,6 +70,23 @@ namespace BusinessServices
             return null;
         }
 
+        public IEnumerable<TicketEntity> GetAllTicketsForUser(int userid)
+        {
+            var tickets = _unitOfWork.TicketRepository.GetMany(t => t.createdby == userid).ToList();
+            if (tickets.Any())
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<tblticket, TicketEntity>();
+                    //cfg.AddProfile()... etc...
+                });
+                var mapper = config.CreateMapper();
+                var ticketsModel = mapper.Map<List<tblticket>, List<TicketEntity>>(tickets);
+                return ticketsModel;
+            }
+            return null;
+        }
+
         public TicketEntity GetTicketHistoryById(int id)
         {
 

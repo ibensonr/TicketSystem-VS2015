@@ -50,6 +50,23 @@ namespace BusinessServices
             return null;
         }
 
+        public UserEntity GetUserDetails(string uname, string password)
+        {
+            var user = _unitOfWork.UserRepository.GetSingle(u => u.uname == uname && u.password == password);
+            if (user != null)
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<tbluser, UserEntity>();
+                    //cfg.AddProfile()... etc...
+                });
+                var mapper = config.CreateMapper();
+                var userModel = mapper.Map<tbluser, UserEntity>(user);
+                return userModel;
+            }
+            return null;
+        }        
+
         public UserEntity GetUserHistoryById(int userId)
         {
             throw new NotImplementedException();

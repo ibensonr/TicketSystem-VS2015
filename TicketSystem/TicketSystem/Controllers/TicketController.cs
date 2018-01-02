@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Routing;
 
 namespace TicketSystem.Controllers
 {
@@ -41,6 +42,17 @@ namespace TicketSystem.Controllers
         public HttpResponseMessage Get(int id)
         {
             var ticket = _ticketServices.GetTicketById(id);
+            if (ticket != null)
+                return Request.CreateResponse(HttpStatusCode.OK, ticket);
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No ticket found for this id");
+        }
+
+        // GET api/ticket/5        
+        [HttpGet]
+        [Route("tickets/GetTicketForUser/{id}")]
+        public HttpResponseMessage GetTicketForUser(int id)
+        {
+            var ticket = _ticketServices.GetAllTicketsForUser(id);
             if (ticket != null)
                 return Request.CreateResponse(HttpStatusCode.OK, ticket);
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No ticket found for this id");

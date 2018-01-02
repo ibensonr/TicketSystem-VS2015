@@ -15,5 +15,6 @@ namespace BusinessServices
         bool UpdateUser(int userId, UserEntity userEntity);
         bool DeleteUser(int userId);
         UserEntity GetUserHistoryById(int userId);
+        UserEntity GetUserDetails(string uname, string password);
     }
 }

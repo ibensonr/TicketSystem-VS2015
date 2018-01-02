@@ -18,5 +18,6 @@ namespace BusinessServices
         bool UpdateTicket(int ticketId, TicketEntity ticketEntity);
         bool DeleteTicket(int ticketId);
         TicketEntity GetTicketHistoryById(int ticketId);
+        IEnumerable<TicketEntity> GetAllTicketsForUser(int userid);
     }
 }
