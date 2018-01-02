@@ -53,15 +53,15 @@ public partial class tbluser
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
 
-    public virtual ICollection<tbluserdepartment> tbluserdepartments { get; set; }
+    public  ICollection<tbluserdepartment> tbluserdepartments { get; set; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
 
-    public virtual ICollection<tbluserinfo> tbluserinfoes { get; set; }
+    public  ICollection<tbluserinfo> tbluserinfoes { get; set; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
 
-    public virtual ICollection<tblticket> tbltickets { get; set; }
+    public  ICollection<tblticket> tbltickets { get; set; }
 
 }
 

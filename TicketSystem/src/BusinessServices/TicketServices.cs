@@ -93,9 +93,43 @@ namespace BusinessServices
                 });
                 var mapper = config.CreateMapper();
                 var ticketsModel = mapper.Map<tblticket, TicketEntity>(ticket);
+
+                var tckcrtdusr = GetUser(ticket.createdby);
+                if (tckcrtdusr != null)
+                {
+                    ticketsModel.tbluser = mapper.Map<UserEntity, UserEntity>(tckcrtdusr);
+                }
+
+                if(ticketsModel.tbltickethistory != null && ticketsModel.tbltickethistory.Count > 0)
+                {
+                    foreach(var th in ticketsModel.tbltickethistory)
+                    {
+                        var tckmdfddusr = GetUser(th.modifiedby);
+                        if (tckmdfddusr != null)
+                        {
+                            th.tbluser = mapper.Map<UserEntity, UserEntity>(tckmdfddusr);
+                        }
+                    }
+                }
+
+                //UserServices us = new UserServices();
+                //var user = us.GetUserById(ticket.createdby);
+                //if(user != null)
+                //{
+                //    ticketsModel.tbluser = mapper.Map<UserEntity, UserEntity>(user);
+                //}
+
                 return ticketsModel;
             }
             return null;
+        }
+
+        private UserEntity GetUser(int? id)
+        {
+            UserServices us = new UserServices();
+            var user = us.GetUserById(id);
+
+            return user;
         }
 
 
