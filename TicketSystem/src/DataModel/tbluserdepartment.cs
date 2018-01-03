@@ -12,34 +12,39 @@
 namespace DataModel
 {
 
-using System;
+    using System;
     using System.Collections.Generic;
-    
-public partial class tbluserdepartment
-{
 
-    public int id { get; set; }
+    public partial class tbluserdepartment
+    {
+        public tbluserdepartment()
+        {
+            //this.tbluser = new tbluser();
+            //this.tbldepartment = new tbldepartment();
+        }
 
-    public Nullable<int> userid { get; set; }
+        public int id { get; set; }
 
-    public Nullable<int> deptid { get; set; }
+        public Nullable<int> userid { get; set; }
 
-    public Nullable<int> createdby { get; set; }
+        public Nullable<int> deptid { get; set; }
 
-    public Nullable<System.DateTime> createdon { get; set; }
+        public Nullable<int> createdby { get; set; }
 
-    public Nullable<int> modifiedby { get; set; }
+        public Nullable<System.DateTime> createdon { get; set; }
 
-    public Nullable<System.DateTime> modifiedon { get; set; }
+        public Nullable<int> modifiedby { get; set; }
 
-    public bool deleted { get; set; }
+        public Nullable<System.DateTime> modifiedon { get; set; }
+
+        public bool deleted { get; set; }
 
 
 
-    public virtual tbldepartment tbldepartment { get; set; }
+        public virtual tbldepartment tbldepartment { get; set; }
 
-    public virtual tbluser tbluser { get; set; }
+        public virtual tbluser tbluser { get; set; }
 
-}
+    }
 
 }

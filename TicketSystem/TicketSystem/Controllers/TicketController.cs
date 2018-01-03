@@ -49,7 +49,7 @@ namespace TicketSystem.Controllers
 
         // GET api/ticket/5        
         [HttpGet]
-        [Route("tickets/GetTicketForUser/{id}")]
+        [Route("api/ticket/GetTicketForUser/{id}")]
         public HttpResponseMessage GetTicketForUser(int id)
         {
             var ticket = _ticketServices.GetAllTicketsForUser(id);

@@ -22,7 +22,7 @@ public partial class tbluser
     public tbluser()
     {
 
-        this.tbluserdepartments = new HashSet<tbluserdepartment>();
+        //this.tbluserdepartments = new HashSet<tbluserdepartment>();
 
         this.tbluserinfoes = new HashSet<tbluserinfo>();
 
@@ -53,7 +53,7 @@ public partial class tbluser
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
 
-    public  ICollection<tbluserdepartment> tbluserdepartments { get; set; }
+    public  virtual ICollection<tbluserdepartment> tbluserdepartments { get; set; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
 
