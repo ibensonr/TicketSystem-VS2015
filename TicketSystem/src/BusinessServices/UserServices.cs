@@ -57,8 +57,10 @@ namespace BusinessServices
             {
                 var config = new MapperConfiguration(cfg =>
                 {
-                    cfg.CreateMap<tbluser, UserEntity>();
+                    //cfg.CreateMap<tbluser, UserEntity>();//.MaxDepth(1);
                     //cfg.AddProfile()... etc...
+                    cfg.CreateMap<tbluser, UserEntity>()
+                    .ForMember(dto => dto.tbldepartments, opt => opt.MapFrom(x => x.tbluserdepartments.Select(y => y.tbldepartment).ToList()));
                 });
                 var mapper = config.CreateMapper();
                 var userModel = mapper.Map<tbluser, UserEntity>(user);

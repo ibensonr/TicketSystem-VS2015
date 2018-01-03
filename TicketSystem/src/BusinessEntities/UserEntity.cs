@@ -17,6 +17,6 @@ namespace BusinessEntities
         public Nullable<int> modifiedby { get; set; }
         public Nullable<System.DateTime> modifiedon { get; set; }
         public bool deleted { get; set; }
-        public ICollection<UserDepartmentEntity> tbluserdepartments { get; set; }
+        public ICollection<DepartmentEntity> tbldepartments { get; set; }
     }
 }
