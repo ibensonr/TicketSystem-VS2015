@@ -58,6 +58,17 @@ namespace TicketSystem.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No ticket found for this id");
         }
 
+        // GET api/ticket/5        
+        [HttpGet]
+        [Route("api/ticket/GetTicketForAgent/{id}")]
+        public HttpResponseMessage GetTicketForAgent(int id)
+        {
+            var ticket = _ticketServices.GetAllTicketsForAgent(id);
+            if (ticket != null)
+                return Request.CreateResponse(HttpStatusCode.OK, ticket);
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No ticket found for this id");
+        }
+
         // POST api/ticket
         public int Post(int userid, [FromBody]TicketEntity ticketEntity)
         {
@@ -66,11 +77,11 @@ namespace TicketSystem.Controllers
         }
 
         // PUT api/ticket/5
-        public bool Put(int id, [FromBody]TicketEntity ticketEntity)
+        public bool Put(int userid, int ticketid, [FromBody]TicketEntity ticketEntity)
         {
-            if (id > 0)
+            if (userid > 0 && ticketid > 0)
             {
-                return _ticketServices.UpdateTicket(id, ticketEntity);
+                return _ticketServices.UpdateTicket(userid, ticketid, ticketEntity);
             }
             return false;
         }
@@ -80,6 +91,14 @@ namespace TicketSystem.Controllers
         {
             if (id > 0)
                 return _ticketServices.DeleteTicket(id);
+            return false;
+        }
+
+        // DELETE api/ticket/5/5
+        public bool Delete(int userid, int ticketid, string comment)
+        {
+            if (userid > 0 && ticketid > 0)
+                return _ticketServices.CloseTicket(userid, ticketid, comment);
             return false;
         }
 

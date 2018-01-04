@@ -87,6 +87,23 @@ namespace BusinessServices
             return null;
         }
 
+        public IEnumerable<TicketEntity> GetAllTicketsForAgent(int userid)
+        {
+            var tickets = _unitOfWork.TicketRepository.GetMany(t => t.assignedtoid == userid).ToList();
+            if (tickets.Any())
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<tblticket, TicketEntity>();
+                    //cfg.AddProfile()... etc...
+                });
+                var mapper = config.CreateMapper();
+                var ticketsModel = mapper.Map<List<tblticket>, List<TicketEntity>>(tickets);
+                return ticketsModel;
+            }
+            return null;
+        }
+
         public TicketEntity GetTicketHistoryById(int id)
         {
 
@@ -111,7 +128,7 @@ namespace BusinessServices
                 var mapper = config.CreateMapper();
                 var ticketsModel = mapper.Map<tblticket, TicketEntity>(ticket);
 
-                var tckcrtdusr = GetUser(ticket.createdby);
+                var tckcrtdusr = GetUser(ticket.modifiedby);
                 if (tckcrtdusr != null)
                 {
                     ticketsModel.tbluser = mapper.Map<UserEntity, UserEntity>(tckcrtdusr);
@@ -119,7 +136,9 @@ namespace BusinessServices
 
                 if(ticketsModel.tbltickethistory != null && ticketsModel.tbltickethistory.Count > 0)
                 {
-                    foreach(var th in ticketsModel.tbltickethistory)
+                    var result = ticketsModel.tbltickethistory.OrderByDescending(a => a.id).ToList();
+                    ticketsModel.tbltickethistory = result;
+                    foreach (var th in result)
                     {
                         var tckmdfddusr = GetUser(th.modifiedby);
                         if (tckmdfddusr != null)
@@ -181,7 +200,7 @@ namespace BusinessServices
         /// <param name="ticketId"></param>
         /// <param name="ticketEntity"></param>
         /// <returns></returns>
-        public bool UpdateTicket(int ticketId, TicketEntity ticketEntity)
+        public bool UpdateTicket(int userid, int ticketId, TicketEntity ticketEntity)
         {
             var success = false;
             if (ticketEntity != null)
@@ -195,11 +214,33 @@ namespace BusinessServices
                         ticket.deptid = ticketEntity.deptid;
                         ticket.description = ticketEntity.description;
                         ticket.comment = ticketEntity.comment;
+                        ticket.modifiedby = userid;
                         _unitOfWork.TicketRepository.Update(ticket);
                         _unitOfWork.Save();
                         scope.Complete();
                         success = true;
                     }
+                }
+            }
+            return success;
+        }
+
+        public bool CloseTicket(int userid, int ticketId, string comment)
+        {
+            var success = false;
+
+            using (var scope = new TransactionScope())
+            {
+                var ticket = _unitOfWork.TicketRepository.GetByID(ticketId);
+                if (ticket != null)
+                {
+                    ticket.comment = comment;
+                    ticket.modifiedby = userid;
+                    ticket.status = 1;
+                    _unitOfWork.TicketRepository.Update(ticket);
+                    _unitOfWork.Save();
+                    scope.Complete();
+                    success = true;
                 }
             }
             return success;

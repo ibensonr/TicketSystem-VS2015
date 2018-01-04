@@ -15,9 +15,12 @@ namespace BusinessServices
         TicketEntity GetTicketById(int ticketId);
         IEnumerable<TicketEntity> GetAllTickets();
         int CreateTicket(TicketEntity ticketEntity);
-        bool UpdateTicket(int ticketId, TicketEntity ticketEntity);
+        bool UpdateTicket(int userid, int ticketId, TicketEntity ticketEntity);
         bool DeleteTicket(int ticketId);
         TicketEntity GetTicketHistoryById(int ticketId);
         IEnumerable<TicketEntity> GetAllTicketsForUser(int userid);
+        IEnumerable<TicketEntity> GetAllTicketsForAgent(int userid);
+        bool CloseTicket(int userid, int ticketId, string comment);
+
     }
 }
