@@ -177,21 +177,87 @@ namespace BusinessServices
         /// <returns></returns>
         public int CreateTicket(TicketEntity ticketEntity)
         {
-            using (var scope = new TransactionScope())
+            int agentId = GetRandomAgentUserIdByDeptId(ticketEntity.deptid) ?? 0;
+            //using (var scope = new TransactionScope())
+            //{
+            //    var ticket = new tblticket
+            //    {
+            //        subject = ticketEntity.subject,
+            //        createdby = ticketEntity.createdby,
+            //        description = ticketEntity.description,
+            //        deptid = ticketEntity.deptid,
+            //        comment = ticketEntity.comment
+            //    };
+            //    _unitOfWork.TicketRepository.Insert(ticket);
+            //    _unitOfWork.Save();
+            //    scope.Complete();
+            //    return ticket.id;
+            //}
+
+
+
+            return 1;
+        }
+
+        private int? GetRandomAgentUserIdByDeptId(int? deptid)
+        {
+            var users = _unitOfWork.UserDepartmentRepository.GetMany(u => u.deptid == deptid).ToList();
+            if (users.Any())
             {
-                var ticket = new tblticket
-                {
-                    subject = ticketEntity.subject,
-                    createdby = ticketEntity.createdby,
-                    description = ticketEntity.description,
-                    deptid = ticketEntity.deptid,
-                    comment = ticketEntity.comment
-                };
-                _unitOfWork.TicketRepository.Insert(ticket);
-                _unitOfWork.Save();
-                scope.Complete();
-                return ticket.id;
+                var userIdList = users.Select(ud => ud.userid).ToList();
+                return GetRandomAgentUserId(userIdList);
+                //var config = new MapperConfiguration(cfg =>
+                //{
+                //    cfg.CreateMap<tblticket, TicketEntity>();
+                //    //cfg.AddProfile()... etc...
+                //});
+                //var mapper = config.CreateMapper();
+                //var usersModel = mapper.Map<List<tbluserdepartment>, List<UserDepartmentEntity>>(users);
+                //return usersModel.Select(u => u.userid);
             }
+            return null;
+        }
+
+        private int?  GetRandomAgentUserId(List<int?> userid)
+        {
+
+            var ticketassignedcount1 = _unitOfWork.TicketRepository.GetMany(t => userid.Contains(t.assignedtoid)).GroupBy(a => a.assignedtoid).Select(c => new { Key = c.Key, total = c.Count() });
+            var notassignedlist1 = userid.Where(u => ticketassignedcount1.Any(a => a.Key != u)).ToList();
+
+            //var tickets = _unitOfWork.TicketRepository.GetWithInclude(t => userid.Contains(t.assignedtoid), include: "assignedtoid").Select(a => a.assignedtoid).ToList();
+
+            //var notassignedlist = userid.Where(u => !tickets.Contains(u)).ToList();
+
+            if (notassignedlist1.Count > 0)
+            {
+                if (notassignedlist1.Count == 1)
+                {
+                    return notassignedlist1.FirstOrDefault().Value;
+                }
+                if (notassignedlist1.Count > 1)
+                {
+                    notassignedlist1.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+                }
+            }
+            else
+            {
+                //var ticketassignedcount = _unitOfWork.TicketRepository.GetMany(t => userid.Contains(t.assignedtoid)).GroupBy(a => a.assignedtoid).Select(c => new { Key = c.Key, total = c.Count() });
+                var mincount = ticketassignedcount1.Min(a => a.total);
+                var selectedUserID = ticketassignedcount1.Where(t => t.total == mincount).OrderBy(a => Guid.NewGuid()).FirstOrDefault();
+                if (selectedUserID != null)
+                {
+                    return selectedUserID.Key;
+                }
+            }
+             
+            return null;
+        }
+
+
+
+        private void assignTicketToAgent()
+        {
+
         }
 
         /// <summary>
@@ -245,6 +311,7 @@ namespace BusinessServices
             }
             return success;
         }
+
 
         /// <summary>
         /// Deletes a particular product

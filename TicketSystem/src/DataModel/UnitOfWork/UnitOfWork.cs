@@ -18,7 +18,8 @@ namespace DataModel.UnitOfWork
         private TicketSystemEntities _context = null;
         private GenericRepository<tbluser> _userRepository;
         private GenericRepository<tbldepartment> _departmentRepository;
-        private GenericRepository<tblticket> _ticketRepository;        
+        private GenericRepository<tblticket> _ticketRepository;
+        private GenericRepository<tbluserdepartment> _userdepartmentRepository;
         #endregion
 
         public UnitOfWork()
@@ -27,6 +28,19 @@ namespace DataModel.UnitOfWork
         }
 
         #region Public Repository Creation properties...
+
+        /// <summary>
+        /// Get/Set Property for userdepartment repository.
+        /// </summary>
+        public GenericRepository<tbluserdepartment> UserDepartmentRepository
+        {
+            get
+            {
+                if (this._userdepartmentRepository == null)
+                    this._userdepartmentRepository = new GenericRepository<tbluserdepartment>(_context);
+                return _userdepartmentRepository;
+            }
+        }
 
         /// <summary>
         /// Get/Set Property for department repository.
