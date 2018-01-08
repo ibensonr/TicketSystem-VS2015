@@ -13,17 +13,25 @@ namespace TicketSystem.Areas.HelpPage.Controllers
     {
         private const string ErrorViewName = "Error";
 
-        public HelpController()
-            : this(GlobalConfiguration.Configuration)
-        {
-        }
+        //public HelpController()
+        //    : this(GlobalConfiguration.Configuration)
+        //{
+        //}
 
-        public HelpController(HttpConfiguration config)
-        {
-            Configuration = config;
-        }
+        //public HelpController(HttpConfiguration config)
+        //{
+        //    Configuration = config;
+        //}
 
-        public HttpConfiguration Configuration { get; private set; }
+        //public HttpConfiguration Configuration { get; private set; }
+
+        /// <summary>
+        /// Add new Configuration Property
+        /// </summary>
+        protected static HttpConfiguration Configuration
+        {
+            get { return GlobalConfiguration.Configuration; }
+        }
 
         public ActionResult Index()
         {

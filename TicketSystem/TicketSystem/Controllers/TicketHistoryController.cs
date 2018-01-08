@@ -12,9 +12,9 @@ namespace TicketSystem.Controllers
     {
         private readonly ITicketServices _ticketServices;
 
-        public TicketHistoryController()
+        public TicketHistoryController(ITicketServices ticketServices)
         {
-            _ticketServices = new TicketServices();
+            _ticketServices = ticketServices;
         }
         // GET: api/TicketHistory
         public IEnumerable<string> Get()

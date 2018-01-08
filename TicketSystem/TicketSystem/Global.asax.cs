@@ -18,6 +18,9 @@ namespace TicketSystem
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //Initialise Bootstrapper
+            Bootstrapper.Initialise();
         }
 
         protected void Application_BeginRequest()

@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{00C92F62-2E69-4B82-A01E-B96F1E94126C}</ProjectGuid>
+    <ProjectGuid>{69F2E2AC-D8AC-4E07-9D88-596958AE3646}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BusinessServices</RootNamespace>
-    <AssemblyName>BusinessServices</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RootNamespace>Resolver</RootNamespace>
+    <AssemblyName>Resolver</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,47 +30,49 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.Mvc3, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Mvc3.1.2\lib\net40\Unity.Mvc3.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DepartmentServices.cs" />
-    <Compile Include="DependencyResolver.cs" />
-    <Compile Include="IDepartmentServices.cs" />
-    <Compile Include="ITicketServices.cs" />
-    <Compile Include="IUserServices.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="ComponentLoader.cs" />
+    <Compile Include="IComponent.cs" />
+    <Compile Include="IRegisterComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TicketServices.cs" />
-    <Compile Include="UserServices.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Resolver\Resolver.csproj">
-      <Project>{69f2e2ac-d8ac-4e07-9d88-596958ae3646}</Project>
-      <Name>Resolver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BusinessEntities\BusinessEntities.csproj">
-      <Project>{45fee2bf-f1fb-48d4-a1d8-e830a5135043}</Project>
-      <Name>BusinessEntities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataModel\DataModel.csproj">
-      <Project>{cfcc0b0a-424a-4a25-aec0-5755390a1291}</Project>
-      <Name>DataModel</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Unity.Mvc3.README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

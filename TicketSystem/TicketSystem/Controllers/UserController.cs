@@ -12,9 +12,9 @@ namespace TicketSystem.Controllers
     {
         private readonly IUserServices _userServices;
 
-        public UserController()
+        public UserController(IUserServices userServices)
         {
-            _userServices = new UserServices();
+            _userServices = userServices;
         }
 
         // GET: api/User

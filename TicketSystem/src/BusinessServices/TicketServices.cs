@@ -22,9 +22,9 @@ namespace BusinessServices
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public TicketServices()
+        public TicketServices(UnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace BusinessServices
 
         private UserEntity GetUser(int? id)
         {
-            UserServices us = new UserServices();
+            UserServices us = new UserServices(_unitOfWork);
             var user = us.GetUserById(id);
 
             return user;
@@ -221,7 +221,7 @@ namespace BusinessServices
         private int?  GetRandomAgentUserId(List<int?> userid)
         {
 
-            var ticketassignedcount1 = _unitOfWork.TicketRepository.GetMany(t => userid.Contains(t.assignedtoid)).GroupBy(a => a.assignedtoid).Select(c => new { Key = c.Key, total = c.Count() });
+            var ticketassignedcount1 = _unitOfWork.TicketRepository.GetMany(t => userid.Contains(t.assignedtoid) && t.status == 0).GroupBy(a => a.assignedtoid).Select(c => new { Key = c.Key, total = c.Count() });
             var notassignedlist1 = userid.Where(u => ticketassignedcount1.Any(a => a.Key != u)).ToList();
 
             //var tickets = _unitOfWork.TicketRepository.GetWithInclude(t => userid.Contains(t.assignedtoid), include: "assignedtoid").Select(a => a.assignedtoid).ToList();

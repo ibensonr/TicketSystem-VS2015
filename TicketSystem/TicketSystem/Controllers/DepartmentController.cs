@@ -13,9 +13,9 @@ namespace TicketSystem.Controllers
     {
         private readonly IDepartmentServices _departmentServices;
 
-        public DepartmentController()
+        public DepartmentController(IDepartmentServices departmentServices)
         {
-            _departmentServices = new DepartmentServices();
+            _departmentServices = departmentServices;
         }
 
         // GET: api/Department

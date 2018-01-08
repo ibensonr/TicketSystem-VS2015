@@ -14,9 +14,9 @@ namespace BusinessServices
     {
         private readonly UnitOfWork _unitOfWork;
 
-        public DepartmentServices()
+        public DepartmentServices(UnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
 
         public int CreateDepartment(DepartmentEntity departmentEntity)

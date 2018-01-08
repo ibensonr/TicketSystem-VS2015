@@ -14,9 +14,9 @@ namespace BusinessServices
     {
         private readonly UnitOfWork _unitOfWork;
 
-        public UserServices()
+        public UserServices(UnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
         public int CreateUser(UserEntity userEntity)
         {

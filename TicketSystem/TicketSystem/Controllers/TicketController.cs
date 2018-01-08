@@ -19,9 +19,9 @@ namespace TicketSystem.Controllers
         /// <summary>
         /// Public constructor to initialize product service instance
         /// </summary>
-        public TicketController()
+        public TicketController(ITicketServices ticketServices)
         {
-            _ticketServices = new TicketServices();
+            _ticketServices = ticketServices;
         }
         #endregion
 
